@@ -114,9 +114,11 @@ int** matrizAdyacente, int* visitados){
      (camino_final->costoTotal == -1 || camino_final->costoTotal > (camino_parcial->costoTotal + matrizAdyacente[ciudadActual][0]))){
     camino_parcial->listaDeVisitados[camino_parcial->cantidadVisitados][0] = ciudadActual;
     camino_parcial->listaDeVisitados[camino_parcial->cantidadVisitados][1] = 0;
-    camino_parcial->listaDeVisitados[camino_parcial->cantidadVisitados][2] = camino_parcial->costoTotal + matrizAdyacente[ciudadActual][0];
+    camino_parcial->listaDeVisitados[camino_parcial->cantidadVisitados][2] = matrizAdyacente[ciudadActual][0];
+    camino_parcial->costoTotal = camino_parcial->costoTotal + matrizAdyacente[ciudadActual][0];
     camino_parcial->cantidadVisitados++;
     llenar_camino_final(camino_parcial, camino_final);
+    camino_parcial->costoTotal = camino_parcial->costoTotal - matrizAdyacente[ciudadActual][0];
     camino_parcial->cantidadVisitados--;
   }
   else{
