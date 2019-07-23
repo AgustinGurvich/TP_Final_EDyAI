@@ -63,7 +63,7 @@ int** obtenerCostos(FILE* file, char** ciudades, int cantidadCiudades){
     }
   }
   buffer = fgetc(file);
-  int i = 0, origen, destino, costo;
+  int i = 0, origen, destino;
   while(!feof(file)){
     while(buffer!=','){
       buff[i] = buffer;
@@ -98,7 +98,6 @@ int** obtenerCostos(FILE* file, char** ciudades, int cantidadCiudades){
 }
 
 void llenar_camino_final(AlmacenarCamino* camino, AlmacenarCamino* caminoFinal){
-  char cosa[50];
   for(int i = 0; i < camino->cantidadVisitados; i++){
     caminoFinal->listaDeVisitados[i][0] = camino->listaDeVisitados[i][0];
     caminoFinal->listaDeVisitados[i][1] = camino->listaDeVisitados[i][1];
@@ -109,7 +108,6 @@ void llenar_camino_final(AlmacenarCamino* camino, AlmacenarCamino* caminoFinal){
 
 void resuelve_tsp(AlmacenarCamino* camino_parcial, AlmacenarCamino* camino_final, int cantidadCiudades, int ciudadActual,
 int** matrizAdyacente, int* visitados){
-  char cosa[50];
   if(camino_parcial->cantidadVisitados == cantidadCiudades-1 && matrizAdyacente[ciudadActual][0] > 0 &&
      (camino_final->costoTotal == -1 || camino_final->costoTotal > (camino_parcial->costoTotal + matrizAdyacente[ciudadActual][0]))){
     camino_parcial->listaDeVisitados[camino_parcial->cantidadVisitados][0] = ciudadActual;
