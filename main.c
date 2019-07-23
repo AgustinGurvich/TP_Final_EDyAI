@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+// #include "funcionesAuxiliares.h"
 
 typedef struct _AlmacenarCamino{
   int** listaDeVisitados;
@@ -139,42 +140,57 @@ int** matrizAdyacente, int* visitados){
   }
 }
 
-int main(){
-  char** ciudades = malloc(sizeof(char*)*50);
+int main(int argc, char* argv[]){
+  if(argc < 3){
+    printf("No se completaron los 3 argumentos necesarios en la ejecucion del programa");
+    return 0;
+  }
+  char** ciudades = malloc(sizeof(char*)*50); //TODO: Destruir
   for (int i = 0; i < 50; i++){
     *(ciudades+i) = malloc(sizeof(char)*50);
   }
-  char* archivo = malloc(sizeof(char)*1000);
-  printf(" Ingrese el nombre completo del archivo\n");
-  scanf("%s", archivo);
-  FILE* file = fopen(archivo, "r");
+  FILE* file = fopen(argv[1], "r");
+  if (file == NULL){
+    printf("Che capo poneme un archivo valido");
+    return 0;
+  }
   int cantidadCiudades = obtenerCiudades(file, ciudades);
-  int** matrizAdyacente = obtenerCostos(file, ciudades, cantidadCiudades);
-  AlmacenarCamino* camino = malloc(sizeof(AlmacenarCamino));
-  camino->listaDeVisitados = malloc(sizeof(int*)*cantidadCiudades);
-  for (int i = 0; i < cantidadCiudades; i++){
-    *(camino->listaDeVisitados + i) = malloc(sizeof(int)*3);
+  if (cantidadCiudades == 1){
+    printf("La cantidad de ciudades no es suficiente para generar un camino");
+    return 0;
   }
-  camino->cantidadVisitados = 0;
-  camino->costoTotal = 0;
-  AlmacenarCamino* caminofinal = malloc(sizeof(AlmacenarCamino));
-  caminofinal->listaDeVisitados = malloc(sizeof(int*)*cantidadCiudades);
-  for (int i = 0; i < cantidadCiudades; i++){
-    *(caminofinal->listaDeVisitados + i) = malloc(sizeof(int)*3);
+  if(cantidadCiudades == 2){
+    //TODO: Escribir el caso de dos ciudades
   }
-  caminofinal->costoTotal = -1;
-  int* visitados = malloc(sizeof(int)*50);
-  for (int i = 0; i < cantidadCiudades; i++){
-    visitados[i] = 0;
+  else{
+    int** matrizAdyacente = obtenerCostos(file, ciudades, cantidadCiudades); //TODO: Destruir
+    fclose(file);
+    AlmacenarCamino* camino = malloc(sizeof(AlmacenarCamino));//TODO: Destruir
+    camino->listaDeVisitados = malloc(sizeof(int*)*cantidadCiudades);
+    for (int i = 0; i < cantidadCiudades; i++){
+      camino->listaDeVisitados[i] = malloc(sizeof(int)*3);
+    }
+    camino->cantidadVisitados = 0;
+    camino->costoTotal = 0;
+    AlmacenarCamino* caminofinal = malloc(sizeof(AlmacenarCamino));//TODO: Destruir
+    caminofinal->listaDeVisitados = malloc(sizeof(int*)*cantidadCiudades);
+    for (int i = 0; i < cantidadCiudades; i++){
+      caminofinal->listaDeVisitados[i] = malloc(sizeof(int)*3);
+    }
+    caminofinal->costoTotal = -1;
+    int* visitados = malloc(sizeof(int)*50);
+    for (int i = 0; i < cantidadCiudades; i++){
+      visitados[i] = 0;
+    }
+    visitados[0] = 1;
+    resuelve_tsp(camino, caminofinal, cantidadCiudades, 0, matrizAdyacente,visitados);
+    int suma = 0;
+    for(int i = 0; i < cantidadCiudades; i++){
+      printf("%d %d %d\n" ,caminofinal->listaDeVisitados[i][0],caminofinal->listaDeVisitados[i][1] , caminofinal->listaDeVisitados[i][2]);
+      suma+=caminofinal->listaDeVisitados[i][2];
+    }
+    printf("%d\n", suma);
+    //TODO: escribir en el archivo de salida
+    return 0;
   }
-  visitados[0] = 1;
-  resuelve_tsp(camino, caminofinal, cantidadCiudades, 0, matrizAdyacente,visitados);
-  int suma = 0;
-  for(int i = 0; i < cantidadCiudades; i++){
-    printf("%d %d %d\n" ,caminofinal->listaDeVisitados[i][0],caminofinal->listaDeVisitados[i][1] , caminofinal->listaDeVisitados[i][2]);
-    suma+=caminofinal->listaDeVisitados[i][2];
-  }
-  printf("%d\n", suma);
-
-  return 0;
 }
