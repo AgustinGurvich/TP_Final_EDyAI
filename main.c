@@ -4,7 +4,10 @@
 #include "funcionesAuxiliares.h"
 
 #define MAX_CIUDADES 30
-
+/*
+  *Recibe dos punteros a la estructura AlmacenarCamino
+  *Copia en los campos de la segunda estructura los datos de la primera
+*/
 void llenar_camino_final(AlmacenarCamino* camino, AlmacenarCamino* caminoFinal){
   for(int i = 0; i < camino->cantidadVisitados; i++){
     caminoFinal->listaDeVisitados[i][0] = camino->listaDeVisitados[i][0];
@@ -14,6 +17,11 @@ void llenar_camino_final(AlmacenarCamino* camino, AlmacenarCamino* caminoFinal){
   }
 }
 
+/*
+  *Recibe dos punteros a una estructura AlmacenarCamino, la cantidad de ciudades del diagrama, la ciudad actual del recorrido
+  *la matriz de adyacencia y una matriz de enteros que indica que ciudades fueron visitadas
+  *Revisa si encontramos un ciclo posible, caso contrario comienza a elegir las ciudades donde viajar y realizar un recorrido desde allí
+*/
 void resuelve_tsp(AlmacenarCamino* caminoParcial, AlmacenarCamino* caminoFinal, int cantidadCiudades, int ciudadActual,
 int** matrizAdyacente, int* visitados){
   if(caminoParcial->cantidadVisitados == cantidadCiudades-1 && matrizAdyacente[ciudadActual][0] > 0 &&
@@ -62,7 +70,7 @@ int main(int argc, char* argv[]){
     return 0;
   }
   int cantidadCiudades = obtenerCiudades(file, ciudades);
-  if (cantidadCiudades == 1){//Reviso que sea un caso valido
+  if (cantidadCiudades < 2){//Reviso que sea un caso valido
     printf("La cantidad de ciudades no es suficiente para generar un camino\n");
     return 0;
   }
