@@ -84,7 +84,7 @@ int main(int argc, char* argv[]){
     }
     caminofinal->costoTotal = -1;
     //Creo un registro de los visitados
-    int* visitados = malloc(sizeof(int)*MAX_CIUDADES);
+    int* visitados = malloc(sizeof(int)*cantidadCiudades);
     for (int i = 0; i < cantidadCiudades; i++){
       visitados[i] = 0;
     }
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]){
     destruir_camino(camino, cantidadCiudades);
     destruir_camino(caminofinal, cantidadCiudades);
     destruir_matriz(matrizAdyacente, cantidadCiudades);
-    destruir_ciudades(ciudades, cantidadCiudades);
+    destruir_ciudades(ciudades, MAX_CIUDADES);
     return 0;
   }
 }

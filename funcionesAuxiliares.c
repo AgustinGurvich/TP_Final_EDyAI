@@ -134,9 +134,7 @@ void destruir_ciudades(char** matriz, int largo){
 */
 void destruir_camino(AlmacenarCamino* camino, int cantidadCiudades){
   for(int i = 0; i < cantidadCiudades; i++){
-    free(camino->listaDeVisitados[0]);
-    free(camino->listaDeVisitados[1]);
-    free(camino->listaDeVisitados[2]);
+    free(camino->listaDeVisitados[i]);
   }
   free(camino->listaDeVisitados);
   free(camino);
