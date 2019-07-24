@@ -25,19 +25,19 @@ void llenar_camino_final(AlmacenarCamino* camino, AlmacenarCamino* caminoFinal){
 void resuelve_tsp(AlmacenarCamino* caminoParcial, AlmacenarCamino* caminoFinal, int cantidadCiudades, int ciudadActual,
 int** matrizAdyacente, int* visitados){
   if(caminoParcial->cantidadVisitados == cantidadCiudades-1 && matrizAdyacente[ciudadActual][0] > 0 &&
-     (camino_final->costoTotal == -1 || camino_final->costoTotal > (caminoParcial->costoTotal + matrizAdyacente[ciudadActual][0]))){
+     (caminoFinal->costoTotal == -1 || caminoFinal->costoTotal > (caminoParcial->costoTotal + matrizAdyacente[ciudadActual][0]))){
     caminoParcial->listaDeVisitados[caminoParcial->cantidadVisitados][0] = ciudadActual;
     caminoParcial->listaDeVisitados[caminoParcial->cantidadVisitados][1] = 0;
     caminoParcial->listaDeVisitados[caminoParcial->cantidadVisitados][2] = matrizAdyacente[ciudadActual][0];
     caminoParcial->costoTotal = caminoParcial->costoTotal + matrizAdyacente[ciudadActual][0];
     caminoParcial->cantidadVisitados++;
-    llenar_camino_final(caminoParcial, caminoPinal);
+    llenar_camino_final(caminoParcial, caminoFinal);
     caminoParcial->costoTotal = caminoParcial->costoTotal - matrizAdyacente[ciudadActual][0];
     caminoParcial->cantidadVisitados--;
   }
   else{
     for(int ciudadDestino = 0; ciudadDestino<cantidadCiudades; ciudadDestino++){
-      if((camino_final->costoTotal == -1 || camino_final->costoTotal > (caminoParcial->costoTotal + matrizAdyacente[ciudadActual][ciudadDestino])
+      if((caminoFinal->costoTotal == -1 || caminoFinal->costoTotal > (caminoParcial->costoTotal + matrizAdyacente[ciudadActual][ciudadDestino])
     )&& (matrizAdyacente[ciudadActual][ciudadDestino] > 0) && !(visitados[ciudadDestino])){
         visitados[ciudadDestino] = 1;
         caminoParcial->listaDeVisitados[caminoParcial->cantidadVisitados][0] = ciudadActual;
@@ -45,10 +45,10 @@ int** matrizAdyacente, int* visitados){
         caminoParcial->listaDeVisitados[caminoParcial->cantidadVisitados][2] = matrizAdyacente[ciudadActual][ciudadDestino];
         caminoParcial->costoTotal = caminoParcial->costoTotal + matrizAdyacente[ciudadActual][ciudadDestino];
         caminoParcial->cantidadVisitados++;
-        resuelve_tsp(caminoParcial, camino_final, cantidadCiudades, ciudadDestino, matrizAdyacente, visitados);
+        resuelve_tsp(caminoParcial, caminoFinal, cantidadCiudades, ciudadDestino, matrizAdyacente, visitados);
         visitados[ciudadDestino] = 0;
         caminoParcial->cantidadVisitados--;
-        caminoParcial->costoTotal = camino_parcial->costoTotal - matrizAdyacente[ciudadActual][ciudadDestino];
+        caminoParcial->costoTotal = caminoParcial->costoTotal - matrizAdyacente[ciudadActual][ciudadDestino];
 
       }
     }
