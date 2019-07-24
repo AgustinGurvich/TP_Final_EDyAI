@@ -119,7 +119,6 @@ void destruir_matriz(int** matriz, int largo){
 */
 void destruir_ciudades(char** matriz, int largo){
   for(int i = 0; i < largo; i++){
-    printf("Voy a liberar %s\n", matriz[i]);
     free (matriz[i]);
   }
   free(matriz);

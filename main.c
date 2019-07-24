@@ -53,8 +53,8 @@ int main(int argc, char* argv[]){
     return 0;
   }
   char** ciudades = malloc(sizeof(char*)*MAX_CIUDADES); //TODO: Destruir
-  for (int i = 0; i < 50; i++){
-    *(ciudades+i) = malloc(sizeof(char)*50);
+  for (int i = 0; i < MAX_CIUDADES; i++){
+    ciudades[i] = malloc(sizeof(char)*50);
   }
   FILE* file = fopen(argv[1], "r");
   if (file == NULL){//Reviso si existe ek archivo de entrada
