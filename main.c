@@ -1,102 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// #include "funcionesAuxiliares.h"
-
-typedef struct _AlmacenarCamino{
-  int** listaDeVisitados;
-  int cantidadVisitados;
-  int costoTotal;
-} AlmacenarCamino;
-
-int posicion(char** ciudades, char* etiqueta, int cantidadCiudades){
-  int i, continuar = 1;
-  for (i = 0; i < cantidadCiudades && continuar; i++){
-    if (!(strcmp(etiqueta, *(ciudades+i)))){
-      continuar = 0;
-    }
-  }
-  return i-1;
-}
-
-int obtenerCiudades(FILE* file, char** ciudades){
-  char buff[50];
-  fscanf(file, "%s", buff);
-  char buffer = fgetc(file);
-  int i = 0, cantidadCiudades = 0;
-  buffer = fgetc(file);
-  while(buffer != '\n'){
-    if(buffer != ','){
-      buff[i] = buffer;
-      i++;
-      buffer = fgetc(file);
-    }
-    else{
-      buff[i] = '\0';
-      strcpy(*(ciudades+cantidadCiudades), buff);
-      cantidadCiudades++;
-      i=0;
-      buffer = fgetc(file);
-      buffer = fgetc(file);
-  }
-}
-buff[i] = '\0';
-strcpy(*(ciudades+cantidadCiudades), buff);
-cantidadCiudades++;
-  return cantidadCiudades;
-}
-
-/*
- *Recibe un archivo, una matriz con las ciudades, una matriz de adyacencia y la cantidad de ciudades
- * y llena la matriz de adyacencia con los costos del archivo
-*/
-int** obtenerCostos(FILE* file, char** ciudades, int cantidadCiudades){
-  char buff[50];
-  int** matrizAdyacente = malloc(sizeof(int*)*cantidadCiudades);
-  for(int i = 0; i < cantidadCiudades; i++){
-    matrizAdyacente[i] = malloc(sizeof(int)*cantidadCiudades);
-  }
-  fscanf(file, "%s", buff);
-  char buffer = fgetc(file);//Agarro el \n
-  for(int i = 0; i < cantidadCiudades; i++){
-    for(int j = 0; j < cantidadCiudades; j++){
-      matrizAdyacente[i][j] = 0;
-    }
-  }
-  buffer = fgetc(file);
-  int i = 0, origen, destino;
-  while(!feof(file)){
-    while(buffer!=','){
-      buff[i] = buffer;
-      i++;
-      buffer = fgetc(file);
-    }
-    buff[i] = '\0';
-    origen = posicion(ciudades, buff, cantidadCiudades);
-    i = 0;
-    buffer = fgetc(file);
-    while(buffer!=','){
-      buff[i] = buffer;
-      i++;
-      buffer = fgetc(file);
-    }
-    buff[i] = '\0';
-    destino = posicion(ciudades, buff, cantidadCiudades);
-    buffer = fgetc(file);
-    i = 0;
-    while(buffer != '\n' && !feof(file)){
-      buff[i] = buffer;
-      i++;
-      buffer = fgetc(file);
-    }
-    buff[i] = '\0';
-    i=0;
-    buffer = fgetc(file);
-    matrizAdyacente[origen][destino] = atoi(buff);
-    matrizAdyacente[destino][origen] = atoi(buff);
-  }
-  return matrizAdyacente;
-}
+#include "funcionesAuxiliares.h"
 
 void llenar_camino_final(AlmacenarCamino* camino, AlmacenarCamino* caminoFinal){
   for(int i = 0; i < camino->cantidadVisitados; i++){
@@ -150,47 +55,48 @@ int main(int argc, char* argv[]){
     *(ciudades+i) = malloc(sizeof(char)*50);
   }
   FILE* file = fopen(argv[1], "r");
-  if (file == NULL){
-    printf("Che capo poneme un archivo valido");
+  if (file == NULL){//Reviso si existe ek archivo de entrada
+    printf("Che capo poneme un archivo valido\n");
     return 0;
   }
   int cantidadCiudades = obtenerCiudades(file, ciudades);
-  if (cantidadCiudades == 1){
-    printf("La cantidad de ciudades no es suficiente para generar un camino");
+  if (cantidadCiudades == 1){//Reviso que sea un caso valido
+    printf("La cantidad de ciudades no es suficiente para generar un camino\n");
     return 0;
   }
-  if(cantidadCiudades == 2){
-    //TODO: Escribir el caso de dos ciudades
-  }
   else{
-    int** matrizAdyacente = obtenerCostos(file, ciudades, cantidadCiudades); //TODO: Destruir
+    int** matrizAdyacente = obtenerCostos(file, ciudades, cantidadCiudades); //Creo la matriz adyacente
     fclose(file);
-    AlmacenarCamino* camino = malloc(sizeof(AlmacenarCamino));//TODO: Destruir
+    //Comienzo a crear los caminos
+    AlmacenarCamino* camino = malloc(sizeof(AlmacenarCamino));
     camino->listaDeVisitados = malloc(sizeof(int*)*cantidadCiudades);
     for (int i = 0; i < cantidadCiudades; i++){
       camino->listaDeVisitados[i] = malloc(sizeof(int)*3);
     }
     camino->cantidadVisitados = 0;
     camino->costoTotal = 0;
-    AlmacenarCamino* caminofinal = malloc(sizeof(AlmacenarCamino));//TODO: Destruir
+    AlmacenarCamino* caminofinal = malloc(sizeof(AlmacenarCamino));
     caminofinal->listaDeVisitados = malloc(sizeof(int*)*cantidadCiudades);
     for (int i = 0; i < cantidadCiudades; i++){
       caminofinal->listaDeVisitados[i] = malloc(sizeof(int)*3);
     }
     caminofinal->costoTotal = -1;
+    //Creo un registro de los visitados
     int* visitados = malloc(sizeof(int)*50);
     for (int i = 0; i < cantidadCiudades; i++){
       visitados[i] = 0;
     }
     visitados[0] = 1;
+    //Resuelvo el problema
     resuelve_tsp(camino, caminofinal, cantidadCiudades, 0, matrizAdyacente,visitados);
-    int suma = 0;
+    FILE* file = fopen(argv[2], "w+");
     for(int i = 0; i < cantidadCiudades; i++){
-      printf("%d %d %d\n" ,caminofinal->listaDeVisitados[i][0],caminofinal->listaDeVisitados[i][1] , caminofinal->listaDeVisitados[i][2]);
-      suma+=caminofinal->listaDeVisitados[i][2];
+      fprintf(file,"%s,%s,%d\n" ,ciudades[caminofinal->listaDeVisitados[i][0]],ciudades[caminofinal->listaDeVisitados[i][1]] , caminofinal->listaDeVisitados[i][2]);
     }
-    printf("%d\n", suma);
     //TODO: escribir en el archivo de salida
+    destruir_camino(camino);
+    destruir_camino(caminofinal);
+    destruir_matriz(matrizAdyacente, cantidadCiudades);
     return 0;
   }
 }

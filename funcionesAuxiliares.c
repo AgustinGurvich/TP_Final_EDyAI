@@ -114,6 +114,17 @@ void destruir_matriz(int** matriz, int largo){
 }
 
 /*
+  *Recibe un puntero a una matriz cuadrada bidimensional de caracteres y su tamaño
+  *Elimina su contenido y el puntero
+*/
+void destruir_ciudades(char** matriz, int largo){
+  for(int i = 0; i < largo; i++){
+    free (matriz[i]);
+  }
+  free(matriz);
+}
+
+/*
   *Recibe un puntero a una estructura AlmacenarCamino
   *Elimina su contenido y el puntero
 */
@@ -122,8 +133,4 @@ void destruir_camino(AlmacenarCamino* camino){
   free(camino->listaDeVisitados[1]);
   free(camino->listaDeVisitados[2]);
   free(camino);
-}
-
-int main(){
-  return 0;
 }
