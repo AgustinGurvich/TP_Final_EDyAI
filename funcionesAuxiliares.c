@@ -27,6 +27,7 @@ int obtenerCiudades(FILE* file, char** ciudades){
   char buff[50];
   fscanf(file, "%s", buff);
   char buffer = fgetc(file);
+  if (buffer == '\r') fgetc(file);
   int i = 0, cantidadCiudades = 0;
   buffer = fgetc(file);
   while(buffer != '\n'){
@@ -47,6 +48,7 @@ int obtenerCiudades(FILE* file, char** ciudades){
 buff[i] = '\0';
 strcpy(*(ciudades+cantidadCiudades), buff);
 cantidadCiudades++;
+if (buffer == '\r') fgetc(file);
   return cantidadCiudades;
 }
 
@@ -68,6 +70,7 @@ int** obtenerCostos(FILE* file, char** ciudades, int cantidadCiudades){
     }
   }
   buffer = fgetc(file);
+  if (buffer == '\r') fgetc(file);
   int i = 0, origen, destino;
   while(!feof(file)){
     while(buffer!=','){
@@ -94,10 +97,11 @@ int** obtenerCostos(FILE* file, char** ciudades, int cantidadCiudades){
       buffer = fgetc(file);
     }
     buff[i] = '\0';
-    i=0;
-    buffer = fgetc(file);
     matrizAdyacente[origen][destino] = atoi(buff);
     matrizAdyacente[destino][origen] = atoi(buff);
+    i=0;
+    buffer = fgetc(file);
+    if (buffer == '\r') fgetc(file);
   }
   return matrizAdyacente;
 }
@@ -128,10 +132,12 @@ void destruir_ciudades(char** matriz, int largo){
   *Recibe un puntero a una estructura AlmacenarCamino
   *Elimina su contenido y el puntero
 */
-void destruir_camino(AlmacenarCamino* camino){
-  free(camino->listaDeVisitados[0]);
-  free(camino->listaDeVisitados[1]);
-  free(camino->listaDeVisitados[2]);
+void destruir_camino(AlmacenarCamino* camino, int cantidadCiudades){
+  for(int i = 0; i < cantidadCiudades; i++){
+    free(camino->listaDeVisitados[0]);
+    free(camino->listaDeVisitados[1]);
+    free(camino->listaDeVisitados[2]);
+  }
   free(camino->listaDeVisitados);
   free(camino);
 }

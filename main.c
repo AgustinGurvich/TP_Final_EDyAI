@@ -97,8 +97,8 @@ int main(int argc, char* argv[]){
     }
     fclose(file);
     free(visitados);
-    destruir_camino(camino);
-    destruir_camino(caminofinal);
+    destruir_camino(camino, cantidadCiudades);
+    destruir_camino(caminofinal, cantidadCiudades);
     destruir_matriz(matrizAdyacente, cantidadCiudades);
     destruir_ciudades(ciudades, cantidadCiudades);
     return 0;

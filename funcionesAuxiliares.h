@@ -25,6 +25,6 @@ int posicion(char** ciudades, char* etiqueta, int cantidadCiudades);
 
 void destruir_matriz(int** matriz, int largo);
 
-void destruir_camino(AlmacenarCamino* camino);
+void destruir_camino(AlmacenarCamino* camino, int cantidadCiudades);
 
 void destruir_ciudades(char** matriz, int largo);
